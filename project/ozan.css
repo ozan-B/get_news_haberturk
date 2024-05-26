@@ -1,0 +1,97 @@
+/* Genel stil ayarları */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Başlık stilleri */
+h1 {
+    font-size: 36px;
+    margin-bottom: 20px;
+}
+
+h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+/* İletişim bilgileri */
+.contact-info {
+    margin-bottom: 5px;
+}
+
+.contact-info a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.contact-info a:hover {
+    text-decoration: underline;
+}
+
+/* Proje listesi */
+.projects ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.projects ul li {
+    margin-bottom: 5px;
+}
+
+.projects ul li a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.projects ul li a:hover {
+    text-decoration: underline;
+}
+
+/* Deneyim, Eğitim, Sertifikalar ve Beceriler bölümleri */
+.experience,
+.education,
+.certifications,
+.skills {
+    margin-bottom: 30px;
+}
+
+.experience p,
+.education p,
+.certifications ul li,
+.skills ul li {
+    margin-bottom: 10px;
+}
+
+/* Responsive tasarım */
+@media screen and (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 30px;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+
+    h3 {
+        font-size: 18px;
+    }
+}

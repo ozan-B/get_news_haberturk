@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karaciğer Sağlığı</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="anasayfa.html">Hakkımda</a></li>
+                <li><a href="https://github.com/ozan-B">Kaynak Kod</a></li>
+                <li><a href="https://www.linkedin.com/in/ozan-bozkurt-66742919a/">İletişim</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="container">
+        <h1>Kanser tedavisi gördü, beyaz saçı ve sakalı siyah uzadı</h1>
+        <img src="https://im.haberturk.com/l/2024/05/25/ver1716625036/3689527_manset/jpg/414x414" alt="image" class="header-image">
+
+        <div class="content">
+            <p>
+            Antalya'da terzilik yapan Cemil Şimşek, 2022 yılında karın sancısı şikayetiyle Antalya Eğitim Araştırma Hastanesi'ne gitti. Kemoterapi devam ederken aynı zamanda akıllı ilaç tedavisine de başlanan Şimşek'in bir süre sonra saç, sakal ve vücut kılları döküldü. Tedavisi tamamlandıktan sonra vücudunda değişiklikler fark eden Şimşek'in saç ve sakalı uzayınca şaşkınlık yaşadı. Kanser tedavisi öncesinde çoğunluğu beyaz olan sakal ve saçı siyaha döndü. Aralarında beyazlıkların da olduğu saçı ve sakalının neden bu hale döndüğünü öğrenmek için doktoruna danışan Şimşek, akıllı ilacın etkisinden kaynaklandığı cevabını aldı.Cemil Şimşek, değişimin arkadaşlarıyla aralarında esprilere konu olduğunu ifade ederek, “Vücudumda en belirgin değişim, sakallarımın siyaha dönmesi oldu. İnsanlar saçını, sakalını boyatıyor" dedi.Akdeniz Üniversitesi Tıp Fakültesi'nden Doç. Dr. Mustafa Karaca, hastaların akıllı ilaçla ilgili pek çok soru sorduğunu söyledi. 24 yıl önce insan hücresinin DNA'sının bulunmasıyla birlikte kanser hücresinin de DNA'sının bilinir hale geldiğini belirten Doç. Dr. Mustafa Karaca, “Kansere neden olan mutasyonu biliyorsak, bu mutasyona yönelik özel ilaçlar geliştirildi. Çok sık gördüğümüz, meme, akciğer, kolon, cilt, baş-boyun gibi 30'dan fazla kanser türüne akıllı ilaçlar uygulanıyor" diye konuştu.Kemoterapi ilaçlarından farkını da anlatan Doç. Dr. Karaca, kemoterapinin sağlıklı hücreleri de öldürdüğünü ancak akıllı ilacın yalnızca kanserli hücrelere müdahale ettiğini söyledi. Akıllı ilaçların da kendine özgü bazı yan etkileri olduğunu anlatan Doç. Dr. Mustafa Karaca, “Bazen çok şaşırdığımız, saçın bembeyaz çıkma durumu var. Hastalarımızın beyaz olan saç ve sakalları da siyah uzayabiliyor" ifadelerini kullandı. 
+            </p>
+        </div>
+    </div>
+    <footer>
+        <p>&copy; 2024 Karaciğer Sağlığı. Tüm hakları saklıdır.</p>
+    </footer>
+
+    <script>
+        // Tüm li öğelerini seç
+        const liElements = document.querySelectorAll('nav ul li');
+
+        // Her bir li öğesi için click olayını dinle
+        liElements.forEach(li => {
+            // Her li öğesi tıklandığında...
+            li.addEventListener('click', () => {
+                // İlgili li öğesinin içindeki a etiketinin href özelliğine git
+                window.location.href = li.querySelector('a').href;
+            });
+        });
+    </script>
+
+
+</body>
+</html>
