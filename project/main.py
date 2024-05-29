@@ -26,7 +26,7 @@ class Program:
         self.veritabani_bozkurt = sql.Connection
 
         # ChromeDriver yolunu belirtin
-        self.driver_path = '/home/boewolf/Desktop/Tengri/pythonProjects/web_ozan_bozkurt_odev/chromedriver-linux64/chromedriver'
+        self.driver_path = '/get_news_haberturk/chromedriver-linux64/chromedriver'
         service = Service(self.driver_path)
 
         # Sessiz mod için seçenekleri ayarlayın
@@ -65,16 +65,16 @@ class Program:
         ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⡴⠁⡀⡈⠸⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙
         ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡼⠉⡀⠰⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
         ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣐⢙⡔⠂⠀⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-        ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡀⠠⣴⢟⠡⡬⠀⠀⠄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀W.W⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀    
+        ⠀⠀⠀⠀By Ozan Bozkurt ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡀⠠⣴⢟⠡⡬⠀⠀⠄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀W.W⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀    
         \033[0m""")
     
     
     
     def slowprint(self,s):
-        for c in s + '\n':
-            sys.stdout.write(c)
-            sys.stdout.flush()
-            time.sleep(0.1 / 100)   
+        for c in s + '\n': #Metnin sonuna bir yeni satır (\n) eklenir ve her karakter için döngü oluşturulur.
+            sys.stdout.write(c) #Geçerli karakter ekrana yazdırılır.
+            sys.stdout.flush() # Çıkış tamponu temizlenir, böylece yazılan karakter hemen ekranda görünür.
+            time.sleep(0.1 / 100)  # Her karakter yazıldıktan sonra 0.1 milisaniye beklenir, bu da metnin yavaşça yazdırılmasını sağlar.
     
     
     def back(self):
@@ -498,7 +498,7 @@ class Program:
         summarizer = LsaSummarizer()
 
         # Generate the summary
-        summary = summarizer(parser.document, sentences_count=10)  # You can adjust the number of sentences in the summary
+        summary = summarizer(parser.document, sentences_count=10)  
 
         time.sleep(3)
             
