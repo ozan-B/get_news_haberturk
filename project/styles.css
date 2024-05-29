@@ -1,157 +1,100 @@
 /* Genel stil ayarları */
 body {
-    font-family: 'Lato', sans-serif;
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
     margin: 0;
     padding: 0;
-    background-color: #eef2f5;
+    background-color: #f4f4f4;
     color: #333;
 }
 
-/* Üstbilgi stil ayarları */
+/* Başlık (Header) stili */
 header {
-    background-color: #34495e;
-    padding: 10px 0;
-    color: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #4CAF50; /* Başlığın arka plan rengini yeşil yapar */
+    color: white; /* Metin rengini beyaz yapar */
+    padding: 20px 0; /* Üst ve alt kenar boşluklarını artırır */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Hafif bir gölge ekleyerek başlığı kaldırır */
+    position: sticky; /* Başlığı yapışkan yapar, sayfa kaydırıldığında üstte kalır */
+    top: 0; /* Başlığın üstte kalmasını sağlar */
+    z-index: 1000; /* Başlığın diğer içeriklerin üzerinde kalmasını sağlar */
+}
+
+header nav {
+    display: flex; /* Flexbox kullanarak düzenleme yapar */
+    justify-content: center; /* Menü öğelerini ortalar */
+    align-items: center; /* Menü öğelerini dikey olarak ortalar */
 }
 
 header nav ul {
-    list-style: none;
-    text-align: center;
-    padding: 0;
-    margin: 0;
+    list-style: none; /* Liste işaretlerini kaldırır */
+    padding: 0; /* Liste içi boşlukları kaldırır */
+    margin: 0; /* Liste dışı boşlukları kaldırır */
+    display: flex; /* Flexbox düzenini uygular */
 }
 
 header nav ul li {
-    display: inline;
-    margin: 0 15px;
+    margin: 0 15px; /* Menü öğeleri arasında yatay boşluk oluşturur */
 }
 
 header nav ul li a {
-    color: #fff;
-    text-decoration: none;
-    font-weight: bold;
-    transition: color 0.3s;
+    color: white; /* Bağlantıların rengini beyaz yapar */
+    text-decoration: none; /* Alt çizgiyi kaldırır */
+    font-size: 1.1em; /* Yazı boyutunu artırır */
+    transition: color 0.3s ease, text-shadow 0.3s ease; /* Yumuşak bir geçiş efekti ekler */
 }
 
 header nav ul li a:hover {
-    color: #e74c3c;
+    color: #ffeb3b; /* Fare üzerine gelindiğinde metin rengini sarıya değiştirir */
+    text-shadow: 0 0 10px rgba(255, 235, 59, 0.7); /* Hafif bir parlama efekti ekler */
 }
 
-/* Konteyner stil ayarları */
+/* Kapsayıcı (Container) stili */
 .container {
-    max-width: 800px;
-    margin: 60px auto;
-    padding: 40px;
-    background-color: #fff;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    border-radius: 12px;
-    line-height: 1.6;
+    width: 80%;
+    margin: 20px auto;
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
-/* Başlık stil ayarları */
-h1 {
-    color: #2c3e50;
-    font-size: 2.8em;
-    margin-bottom: 20px;
-    text-align: center;
-    font-weight: 700;
-    position: relative;
+/* Başlık ve resim stili */
+.container h1 {
+    font-size: 3.5em; /* Başlık yazı boyutunu artırır */
+    text-align: center; /* Başlığı ortalar */
+    color: #444; /* Yazı rengini biraz daha açık bir gri yapar */
+    margin-bottom: 20px; /* Alt kenar boşluğunu 20 piksel olarak ayarlar */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); /* Hafif bir metin gölgesi ekler */
+    font-weight: bold; /* Yazıyı kalın yapar */
 }
 
-h1::after {
-    content: '';
-    width: 120px;  /* Çizginin genişliği artırıldı */
-    height: 4px;
-    background-color: #e74c3c;
+.header-image {
     display: block;
-    margin: 10px auto;
-    border-radius: 2px;
-}
-
-/* Paragraf stil ayarları */
-p {
-    font-size: 1.15em;
-    margin-bottom: 20px;
-    text-align: justify;
-    color: #555;
-}
-
-p:first-letter {
-    font-size: 1.6em;
-    font-weight: bold;
-    color: #e74c3c;
-    float: left;
-    margin-right: 10px;
-    line-height: 1;
-}
-
-/* Link stil ayarları */
-a {
-    color: #e74c3c;
-    text-decoration: none;
-    border-bottom: 2px solid transparent;
-    transition: border-bottom 0.3s;
-}
-
-a:hover {
-    border-bottom: 2px solid #e74c3c;
-}
-
-/* Görüntülerin stil ayarları */
-img {
-    max-width: 100%;
+    max-width: 80%; /*resim boyutu*/
     height: auto;
-    display: block;
-    margin: 20px 0;
-    border-radius: 8px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    margin: 0 auto 20px auto;
+    border-radius: 10px;
 }
 
-/* Alıntı stil ayarları */
-blockquote {
-    background-color: #f9f9f9;
-    border-left: 5px solid #e74c3c;
-    margin: 20px 0;
-    padding: 15px 20px;
-    font-style: italic;
-    color: #555;
+/* İçerik (Content) stili */
+
+Kodu kopyala
+.content p {
+    font-size: 1.1em;       /* Paragrafın yazı boyutunu 1.1em olarak ayarlar. "em" birimi, ilgili öğenin yazı boyutunun bir katı olarak hesaplanır. Bu, metnin boyutunu biraz büyütür. */
+    margin-bottom: 215px;   /* Paragrafın alt kenarına 215 piksel boşluk ekler. Bu, paragrafın altında büyük bir boşluk bırakır. */
+    text-align: start;    /* Paragrafın metnini iki yana yaslar, yani metni sol ve sağ kenarlara eşit şekilde dağıtarak hizalar. */
 }
 
-blockquote p {
-    margin: 0;
-}
-
-/* Liste stil ayarları */
-ul, ol {
-    margin: 20px 0;
-    padding-left: 20px;
-}
-
-ul li, ol li {
-    margin: 10px 0;
-    line-height: 1.6;
-}
-
-/* Alt bilgi stil ayarları */
+/* Altbilgi (Footer) stili */
 footer {
-    text-align: center;
-    margin-top: 50px;
-    font-size: 0.9em;
-    color: #777;
+    background-color: #333; /* Altbilginin arka plan rengini koyu gri (#333) olarak ayarlar. */
+    color: white;           /* Altbilgi içindeki metin rengini beyaz olarak ayarlar. */
+    text-align: center;     /* Altbilgi içindeki metni ortalar. */
+    padding: 5px 0;        /* Altbilgi içindeki içeriğin üst ve alt kenarlarına 10 piksel boşluk ekler, sol ve sağ kenarlar için ise 0 piksel boşluk bırakır. */
+    position: fixed;        /* Altbilgiyi sabit bir konuma yerleştirir; bu, sayfa kaydırılsa bile altbilginin sabit kalmasını sağlar. */
+    bottom: 0;              /* Altbilgiyi, sayfanın alt kısmına sabitler. */
+    width: 100%;            /* Altbilginin genişliğini yüzde 100 yapar, yani sayfanın tamamı boyunca uzanır. */
 }
 
-/* Duyarlı tasarım ayarları */
-@media (max-width: 768px) {
-    .container {
-        padding: 20px;
-    }
-
-    h1 {
-        font-size: 2.2em;
-    }
-
-    p {
-        font-size: 1em;
-    }
+footer p {
+    margin: 0;
 }

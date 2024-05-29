@@ -1,0 +1,21 @@
+program başlatıldığı an otomatik olarak:
+-python server aç
+-sitedeki tüm haberleri çek ve database'e kaydet
+
+
+Haber türk sağlık subdomainlerindeki verileri çek
+
+yeni bir database tablosu oluştur
+yine aynı bilgileri tutsun 
+ama scrapy kodu şunu yapsın haber türkün sağlık subdomainlerini tek tek tarasın ve içerikleri database'e kaydetsin
+bunların hepsini tek bir seferde yapsın program başladığında
+
+
+
+    1- Genel Sağlık
+    2-Anne ve Çocuk
+    3- Kalp sağlığı
+    4-Beslenme
+    5-Kanser
+    6-Cinsel Sağlık
+    7- Estetik cerrahi
