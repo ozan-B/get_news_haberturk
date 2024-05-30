@@ -14,7 +14,7 @@ libraries = [
     "selenium",
     "bs4",
     "prettytable",
-    "summy"
+    "sumy"
 ]
 
 def install_libraries():
