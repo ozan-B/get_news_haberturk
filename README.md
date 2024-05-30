@@ -5,6 +5,8 @@
 >- python3 setup.py
 >- python3 main.py
 
+>**Not1:** Bilgisayarınızda chrome browser olmalı
+>**Not2:** main.py dosyasındaki driver path değişkenini kendi driverınızın yolu olarak değiştirmeyi unutmayın
 ---
 
 # :snowflake: Aracın amacı ve ne yaptığı hakkında ön bilgi :snowflake:
