@@ -13,9 +13,7 @@ libraries = [
     "builtwith",
     "selenium",
     "bs4",
-    "prettytable",
-    "sumy",
-    "nltk"
+    "prettytable"
 ]
 
 def install_libraries():
@@ -29,8 +27,6 @@ def install_libraries():
             print(f"{lib} not installed. Installing...")
             subprocess.call(['pip', 'install', lib])
             installed_libraries.append(lib)
-    import nltk
-    nltk.download('punkt')
     return installed_libraries
 
 if __name__ == "__main__":

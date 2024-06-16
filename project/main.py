@@ -18,6 +18,11 @@ from sumy.summarizers.lsa import LsaSummarizer
 import datetime
 import sys
 import os
+import cv2
+import numpy as np
+import nltk
+nltk.download('punkt')
+
 
 
 
@@ -26,12 +31,12 @@ class Program:
         self.veritabani_bozkurt = sql.Connection
 
         # ChromeDriver yolunu belirtin
-        self.driver_path = '/get_news_haberturk/chromedriver-linux64/chromedriver'
+        self.driver_path = '/home/boewolf/Desktop/Tengri/pythonProjects/web_ozan_bozkurt_odev/chromedriver-linux64/chromedriver'
         service = Service(self.driver_path)
 
         # Sessiz mod için seçenekleri ayarlayın
         chrome_options = Options()
-        chrome_options.add_argument("--headless")
+        #chrome_options.add_argument("--headless")
 
         #chrome_options.add_argument('--headless')  # Sessiz modu etkinleştir
 
@@ -65,7 +70,7 @@ class Program:
         ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⡴⠁⡀⡈⠸⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙
         ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡼⠉⡀⠰⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
         ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣐⢙⡔⠂⠀⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-        ⠀⠀⠀⠀By Ozan Bozkurt ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡀⠠⣴⢟⠡⡬⠀⠀⠄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀W.W⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀    
+        ⠀⠀⠀⠀⠀By Ozan Bozkurt⠀⠀ ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡀⠠⣴⢟⠡⡬⠀⠀⠄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀W.W⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀    
         \033[0m""")
     
     
@@ -85,7 +90,7 @@ class Program:
     def scrape_and_save(self, url, Table_name):
 
         self.driver.get(url)
-        time.sleep(3)
+        time.sleep(6)
         #self.connect_veritabani_bozkurt() #database kayıt için en başta bir kere databese bağlanııyoruz
 
         # Sayfanın sonuna kadar kaydırma işlemi
@@ -96,14 +101,14 @@ class Program:
             self.driver.execute_script(f"window.scrollTo(0, {last_height//2});")
             
             # Yeni içeriğin yüklenmesini bekleyin
-            time.sleep(2)
+            time.sleep(4)
             
             # Yeni sayfa yüksekliğini alın
             new_height = self.driver.execute_script("return document.body.scrollHeight")
             
             #Sayfanın sonuna kaydır
             self.driver.execute_script(f"window.scrollTo(3500, {new_height});")
-            time.sleep(2)
+            time.sleep(4)
 
             # Eğer yeni yüklenen içerik yoksa, döngüden çıkın
             if new_height == last_height:
@@ -145,6 +150,24 @@ class Program:
                 img_tag = a.select_one('img')
                 if img_tag:  # Eğer img etiketi bulunduysa
                     img_src = img_tag.get('src') or img_tag.get_text()
+
+                    if img_src and img_src.startswith("/images/dummy/placeholder-image.gif"):
+                        data_src = img_tag.get("data-src") or img_tag.get_text()
+                        if data_src:
+                            img_src = data_src
+
+                    #resimde insan olup olmaması işleminin başlangıcı
+
+
+                    boolean_deger = self.detect_humans(img_src)
+
+                    if boolean_deger:
+                        Human_value = 1
+                    else:
+                        Human_value = 0    
+
+                    #resimde insan olup olmaması işleminin bitişi
+
                     
                     match = re.search(pattern, img_src)  # Deseni metin içinde ara
                     if match:
@@ -165,7 +188,7 @@ class Program:
                 
                 if domain_databasede_kiyasla == False:
                     
-                    self.save_to_database(href, baslik, img_src, found_text, Table_name)
+                    self.save_to_database(href, baslik, img_src, found_text, Table_name, Human_value)
              
 
         # Tarayıcıyı kapatın
@@ -179,7 +202,7 @@ class Program:
             print(Fore.RED+"Veritabanı bağlantısında sorun yaşandı.")
 
     #Bu fonksiyon çekilen bütün haberleri "title -> url" olarak tablo formatında ekrana yazdırır ve kullanıcıdan bir haberi seçmesini ister
-    def get_the_all_news(self,date,Table_name):
+    def get_the_all_news(self,date,Table_name,human1,human2):
         
         # Bütün haberleri database den çek ve ekrana yazdır her satırın başında bir id olsun 
         self.connect_veritabani_bozkurt()
@@ -187,7 +210,9 @@ class Program:
 
         try:
             # Veritabanından tüm HABER BAŞLIKLARINI ve KISALTILMIŞ URL leri al
-            cursor.execute(f"SELECT Title,Short_url,Tarih FROM {Table_name} WHERE Tarih LIKE '%{date}%';")
+            #cursor.execute(f"SELECT Title,Short_url,Tarih,Human FROM {Table_name} WHERE Tarih LIKE '%{date}%';")
+            #aşağıdaki komutta kullanıcı 1,1 girerse sadece insan olanlar gelir::0,0 girerse insan olmayanlar gelir::1,0 girerse tüm sütunlar gelir
+            cursor.execute(f"SELECT Title, Short_url, Tarih, Human FROM {Table_name} WHERE Tarih LIKE '%{date}%' AND (Human = {human1} OR Human = {human2});")
             rows = cursor.fetchall()
 
             # Sonuçları tablo şeklinde görüntülemek için PrettyTable nesnesi oluştur
@@ -275,7 +300,7 @@ class Program:
         # Sonuç listesi döndürülür
         return found
 
-    def save_to_database(self, domain, title, img_src, date, Table_name):
+    def save_to_database(self, domain, title, img_src, date, Table_name, Human_value):
         try:
             # Veritabanına bağlan
             #self.connect_veritabani_bozkurt()
@@ -285,10 +310,10 @@ class Program:
             short_url = self.url_shorter(domain)
             
             # SQL sorgusu oluştur
-            sql_query = f"INSERT INTO {Table_name} (Domain, Title, Resim, Tarih, Short_url) VALUES (?, ?, ?, ?, ? )"
+            sql_query = f"INSERT INTO {Table_name} (Domain, Title, Resim, Tarih, Short_url, Human) VALUES (?, ?, ?, ?, ?, ? )"
             
             # SQL sorgusunu çalıştır
-            cursor.execute(sql_query, (domain, title, img_src, date, short_url))
+            cursor.execute(sql_query, (domain, title, img_src, date, short_url, Human_value))
 
             # Değişiklikleri kaydet
             self.veritabani_bozkurt.commit()
@@ -429,64 +454,101 @@ class Program:
         return summary
         
     def main_processes(self, Table_name):
-        print(Fore.BLUE+"""      
-            1-Tüm haberleri getir
-              
-            2-Son bir günde çıkan haberleri getir
-              
-            3-Verilen tarihteki haberleri getir
-            """+Style.RESET_ALL)           
-
-        option=input(Back.GREEN+Fore.BLACK+"seçimini yap : "+Style.RESET_ALL)
         
-        if option == "1":
-            os.system("clear")
-            date=20 # tüm haberleri getirmek için bu değişkeni belirledim tarihin içinde 2024'ün 20'si olan tüm verileri databaseden çekecek
-            url=self.get_the_all_news(date,Table_name)
-            self.get_news_or_my_custom_news(url, Table_name)
-       
-        elif option == "2":
-            os.system("clear")
+        while True:
+            print(Fore.BLUE+"""      
+                1-Tüm haberleri getir
+                
+                2-Son bir günde çıkan haberleri getir
+                
+                3-Verilen tarihteki haberleri getir
+                
+                4- Haber resminde insan olan haberleri getir
+                
+                5- Haber resminde insan olmayan haberleri getir
+                """+Style.RESET_ALL)           
 
-            tarih_bilgisi = datetime.datetime.now()#şuanki tarih bilgisini alır 
-            #ama şu formatta yazdırır = 2024-05-27 10:04:23.175173 bizim bunu databasede olan foratta yazdırmamız lazım
-            # databasedeki format ludur = 2024/25/07
+            option=input(Back.GREEN+Fore.BLACK+"seçimini yap : "+Style.RESET_ALL)
             
-            # Tarihi istenen formatta yazdırma
-            formatli_tarih = tarih_bilgisi.strftime("%Y/%m/%d") # %Y/%m/%d formatı, yılı dört basamak olarak, ayı iki basamak olarak ve günü iki basamak olarak gösterir ve bu parçalar arasında "/" karakterini kullanır.
-            print("Formatlı Tarih:", formatli_tarih)
+            if option == "1":
+                while True:
+                    try:
+                        os.system("clear")
+                        date=20 # tüm haberleri getirmek için bu değişkeni belirledim tarihin içinde 2024'ün 20'si olan tüm verileri databaseden çekecek
+                        url=self.get_the_all_news(date,Table_name,1,0)
+                        self.get_news_or_my_custom_news(url, Table_name)
+                    except Exception as e:
+                        print(f"Hata: {e}")
+                        break
 
-            date=formatli_tarih # tüm haberleri getirmek için bu değişkeni belirledim tarihin içinde 2024'ün 20'si olan tüm verileri databaseden çekecek
-            url=self.get_the_all_news(date,Table_name)
-            self.get_news_or_my_custom_news(url,Table_name)
+            elif option == "2":
+
         
-        elif option == "3":
-            os.system("clear")
+                os.system("clear")
 
+                tarih_bilgisi = datetime.datetime.now()#şuanki tarih bilgisini alır 
+                #ama şu formatta yazdırır = 2024-05-27 10:04:23.175173 bizim bunu databasede olan foratta yazdırmamız lazım
+                # databasedeki format ludur = 2024/25/07
+                
+                # Tarihi istenen formatta yazdırma
+                formatli_tarih = tarih_bilgisi.strftime("%Y/%m/%d") # %Y/%m/%d formatı, yılı dört basamak olarak, ayı iki basamak olarak ve günü iki basamak olarak gösterir ve bu parçalar arasında "/" karakterini kullanır.
+                print("Formatlı Tarih:", formatli_tarih)
+
+                date=formatli_tarih # tüm haberleri getirmek için bu değişkeni belirledim tarihin içinde 2024'ün 20'si olan tüm verileri databaseden çekecek
+                url=self.get_the_all_news(date,Table_name,1,0)
+                self.get_news_or_my_custom_news(url,Table_name)
+                
+            elif option == "3":
+                
             
-            print(Fore.BLUE+"""
-                   Bu kısımda tarih bilgisini şu formatta vermelisiniz :: yıl/ay/gün 
+                os.system("clear")
 
-            """+Style.RESET_ALL)
+                
+                print(Fore.BLUE+"""
+                    Bu kısımda tarih bilgisini şu formatta vermelisiniz :: yıl/ay/gün 
 
-            value=input(Back.GREEN+Fore.BLACK+"tarihi giriniz"+Style.RESET_ALL)
+                """+Style.RESET_ALL)
 
-            # Girdinin istenen formata uyup uymadığını kontrol et
-            if value.count('/') == 2:  # Girdide iki tane '/' karakteri olup olmadığını kontrol et
-                parts = value.split('/')  # Girdiyi '/' karakterine göre bölerek parçalarına ayır
-                # Parçaların uzunluklarını ve sayı olup olmadıklarını kontrol et
-                if len(parts[0]) == 4 and len(parts[1]) == 2 and len(parts[2]) == 2 and parts[0].isdigit() and parts[1].isdigit() and parts[2].isdigit():
-                    print(Fore.GREEN+"Tarih formatı doğru."+Style.RESET_ALL)  # Format doğruysa mesaj yazdır
-                    date=value # tüm haberleri getirmek için bu değişkeni belirledim tarihin içinde 2024'ün 20'si olan tüm verileri databaseden çekecek
-                    url=self.get_the_all_news(date,Table_name)
-                    self.get_news_or_my_custom_news(url,Table_name)  
-                else:
-                    print(Fore.RED+"Yanlış formatta giriş yaptınız.")  # Parçalar doğru uzunlukta veya sayı değilse mesaj yazdır
+                value=input(Back.GREEN+Fore.BLACK+"tarihi giriniz"+Style.RESET_ALL)
+
+                # Girdinin istenen formata uyup uymadığını kontrol et
+                if value.count('/') == 2:  # Girdide iki tane '/' karakteri olup olmadığını kontrol et
+                    parts = value.split('/')  # Girdiyi '/' karakterine göre bölerek parçalarına ayır
+                    # Parçaların uzunluklarını ve sayı olup olmadıklarını kontrol et
+                    if len(parts[0]) == 4 and len(parts[1]) == 2 and len(parts[2]) == 2 and parts[0].isdigit() and parts[1].isdigit() and parts[2].isdigit():
+                        print(Fore.GREEN+"Tarih formatı doğru."+Style.RESET_ALL)  # Format doğruysa mesaj yazdır
+                        date=value # tüm haberleri getirmek için bu değişkeni belirledim tarihin içinde 2024'ün 20'si olan tüm verileri databaseden çekecek
+                        url=self.get_the_all_news(date,Table_name,1,0)
+                        self.get_news_or_my_custom_news(url,Table_name)  
+                    else:
+                        print(Fore.RED+"Yanlış formatta giriş yaptınız.")  # Parçalar doğru uzunlukta veya sayı değilse mesaj yazdır
+            
+            
+                       
+                                    
+
+
+
+
+
+            elif option == "4":
+                os.system("clear")
+                date=20 # tüm haberleri getirmek için bu değişkeni belirledim tarihin içinde 2024'ün 20'si olan tüm verileri databaseden çekecek
+                url=self.get_the_all_news(date,Table_name,1,1)
+                self.get_news_or_my_custom_news(url, Table_name)
+                
+            
+            elif option == "5":
+                os.system("clear")
+                date=20 # tüm haberleri getirmek için bu değişkeni belirledim tarihin içinde 2024'ün 20'si olan tüm verileri databaseden çekecek
+                url=self.get_the_all_news(date,Table_name,0,0)
+                self.get_news_or_my_custom_news(url, Table_name)
+            
             else:
                 print(Fore.RED+"Yanlış formatta giriş yaptınız.")  # '/' karakteri sayısı doğru değilse mesaj yazdır
-            
-        
                 
+            
+                    
 
 
     def metin_ozet_al(self,content):#bunu devam ettir text ve img değerleri döndürsün ve create_html fonksiyonunu burada çalıştırsın .
@@ -574,42 +636,42 @@ class Program:
         url3="https://www.haberturk.com/saglik/anne-ve-cocuk"
         self.scrape_and_save(url3, data_base_table_name_sub)
         print(Fore.GREEN+"Anne ve Çocuk  verileri çekildi ve kaydedildi"+Style.RESET_ALL)
-        time.sleep(10)
+        time.sleep(20)
 
         #4-Kalp sağlığı
         data_base_table_name_sub="Kalp_Saglik"
         url4="https://www.haberturk.com/saglik/kalp-sagligi"
         self.scrape_and_save(url4, data_base_table_name_sub)
         print(Fore.GREEN+"Kalp sağlığı verileri çekildi ve kaydedildi"+Style.RESET_ALL)
-        time.sleep(10)
+        time.sleep(20)
 
         #5-Beslenme
         data_base_table_name_sub="Beslenme"
         url5="https://www.haberturk.com/saglik/saglikli-beslenme"
         self.scrape_and_save(url5, data_base_table_name_sub)
         print(Fore.GREEN+"Beslenme verileri çekildi ve kaydedildi"+Style.RESET_ALL)
-        time.sleep(10)
+        time.sleep(20)
 
         #6-Kanser
         data_base_table_name_sub="Kanser"
         url6="https://www.haberturk.com/saglik/kanser"
         self.scrape_and_save(url6, data_base_table_name_sub)
         print(Fore.GREEN+"Kanser verileri çekildi ve kaydedildi"+Style.RESET_ALL)
-        time.sleep(10)
+        time.sleep(20)
 
         #7-Cinsel Sağlık
         data_base_table_name_sub="Cinsel_Saglik"
         url7="https://www.haberturk.com/saglik/cinsel-saglik"
         self.scrape_and_save(url7,data_base_table_name_sub)
         print(Fore.GREEN+"Cinsel Sağlık verileri çekildi ve kaydedildi"+Style.RESET_ALL)
-        time.sleep(10)
+        time.sleep(20)
 
         #8-Estetik cerrahi
         data_base_table_name_sub="Estetik_Cerrahi"
         url8="https://www.haberturk.com/saglik/estetik-cerrahi"
         self.scrape_and_save(url8,data_base_table_name_sub)
         print(Fore.GREEN+"Sağlık verileri çekildi ve kaydedildi"+Style.RESET_ALL)
-        time.sleep(10)
+        time.sleep(20)
 
         
     def main(self):
@@ -647,6 +709,11 @@ class Program:
                     3-Verilen tarihteki haberleri getir
                     
                     4-Sağlık subdomainleri haberlerine bak
+                    
+                    5-Haber resminde insan olan haberleri getir
+                      
+                    6-Haber resminde insan olmayan haberleri getir
+                      
                 """)           
 
                 option=input(Back.GREEN +Fore.BLACK +"seçimini yap : "+Style.RESET_ALL)
@@ -654,13 +721,18 @@ class Program:
 
 
                 if option == "1":
-                    
-                    os.system("clear")
-                    Table_name="Odev"
-                    date=20 # tüm haberleri getirmek için bu değişkeni belirledim tarihin içinde 2024'ün 20'si olan tüm verileri databaseden çekecek
-                    url=self.get_the_all_news(date,Table_name)
-                    Table_name="Odev"
-                    self.get_news_or_my_custom_news(url,Table_name)
+
+                    while True:
+                        try:
+                            os.system("clear")
+                            Table_name="Odev"
+
+                            date=20 # tüm haberleri getirmek için bu değişkeni belirledim tarihin içinde 2024'ün 20'si olan tüm verileri databaseden çekecek
+                            url=self.get_the_all_news(date,Table_name,1,0)
+                            self.get_news_or_my_custom_news(url, Table_name)
+                        except Exception as e:
+                            print(f"Hata: {e}")
+                            break
 
                     #ana menüye dönme veya aracı kullanmaya devam etmek için kontrol mekanizması
                     user_input = self.back()
@@ -673,29 +745,37 @@ class Program:
                     else:
                         print("Good By :)")
                         exit()
+                            
                         
             
                 elif option == "2":
-                    os.system("clear")
 
-                    Table_name="Odev"
+                    while True:
+                        try:
+                            os.system("clear")
 
-                    tarih_bilgisi = datetime.datetime.now()#şuanki tarih bilgisini alır 
-                    #ama şu formatta yazdırır = 2024-05-27 10:04:23.175173 bizim bunu databasede olan foratta yazdırmamız lazım
-                    # databasedeki format ludur = 2024/25/07
-                    
-                    # Tarihi istenen formatta yazdırma
-                    formatli_tarih = tarih_bilgisi.strftime("%Y/%m/%d") # %Y/%m/%d formatı, yılı dört basamak olarak, ayı iki basamak olarak ve günü iki basamak olarak gösterir ve bu parçalar arasında "/" karakterini kullanır.
-                    #print("Formatlı Tarih:", formatli_tarih)
+                            Table_name="Odev"
 
-                    date=formatli_tarih # tüm haberleri getirmek için bu değişkeni belirledim tarihin içinde 2024'ün 20'si olan tüm verileri databaseden çekecek
-                    url=self.get_the_all_news(date,Table_name)
-                    Table_name="Odev"
+                            tarih_bilgisi = datetime.datetime.now()#şuanki tarih bilgisini alır 
+                            #ama şu formatta yazdırır = 2024-05-27 10:04:23.175173 bizim bunu databasede olan foratta yazdırmamız lazım
+                            # databasedeki format ludur = 2024/25/07
+                            
+                            # Tarihi istenen formatta yazdırma
+                            formatli_tarih = tarih_bilgisi.strftime("%Y/%m/%d") # %Y/%m/%d formatı, yılı dört basamak olarak, ayı iki basamak olarak ve günü iki basamak olarak gösterir ve bu parçalar arasında "/" karakterini kullanır.
+                            #print("Formatlı Tarih:", formatli_tarih)
 
-                    self.get_news_or_my_custom_news(url,Table_name)
+                            date=formatli_tarih # tüm haberleri getirmek için bu değişkeni belirledim tarihin içinde 2024'ün 20'si olan tüm verileri databaseden çekecek
+                            url=self.get_the_all_news(date,Table_name,1,0)
+                            Table_name="Odev"
 
+                            self.get_news_or_my_custom_news(url,Table_name)
+
+                        except Exception as e:
+                                print(f"Hata: {e}")
+                                break
+                        
                     user_input = self.back()
-                    if user_input == 'b' or user_input == 'B':
+                    if user_input == 'e' or user_input == 'e':
                         os.system('clear')
                         break
                     elif user_input == 'a' or user_input == 'A':
@@ -708,34 +788,54 @@ class Program:
 
                 
                 elif option == "3":
-                    os.system("clear")
 
-                    Table_name="Odev"
+                    while True:
 
-                    
-                    print(Fore.BLUE+"""
-                        Bu kısımda tarih bilgisini şu formatta vermelisiniz :: yıl/ay/gün 
+                        try:
+                            os.system("clear")
 
-                    """+ Style.RESET_ALL)
-
-                    value=input(Back.GREEN+Fore.BLACK+"tarihi giriniz"+Style.RESET_ALL)
-
-                    # Girdinin istenen formata uyup uymadığını kontrol et
-                    if value.count('/') == 2:  # Girdide iki tane '/' karakteri olup olmadığını kontrol et
-                        parts = value.split('/')  # Girdiyi '/' karakterine göre bölerek parçalarına ayır
-                        # Parçaların uzunluklarını ve sayı olup olmadıklarını kontrol et
-                        if len(parts[0]) == 4 and len(parts[1]) == 2 and len(parts[2]) == 2 and parts[0].isdigit() and parts[1].isdigit() and parts[2].isdigit():
-                            print(Fore.GREEN+"Tarih formatı doğru."+Style.RESET_ALL)  # Format doğruysa mesaj yazdır
-                            date=value # tüm haberleri getirmek için bu değişkeni belirledim tarihin içinde 2024'ün 20'si olan tüm verileri databaseden çekecek
-                            url=self.get_the_all_news(date,Table_name)
-                            
                             Table_name="Odev"
-                            self.get_news_or_my_custom_news(url,Table_name)  
+
+                            
+                            print(Fore.BLUE+"""
+                                Bu kısımda tarih bilgisini şu formatta vermelisiniz :: yıl/ay/gün 
+
+                            """+ Style.RESET_ALL)
+
+                            value=input(Back.GREEN+Fore.BLACK+"tarihi giriniz"+Style.RESET_ALL)
+
+                            # Girdinin istenen formata uyup uymadığını kontrol et
+                            if value.count('/') == 2:  # Girdide iki tane '/' karakteri olup olmadığını kontrol et
+                                parts = value.split('/')  # Girdiyi '/' karakterine göre bölerek parçalarına ayır
+                                # Parçaların uzunluklarını ve sayı olup olmadıklarını kontrol et
+                                if len(parts[0]) == 4 and len(parts[1]) == 2 and len(parts[2]) == 2 and parts[0].isdigit() and parts[1].isdigit() and parts[2].isdigit():
+                                    print(Fore.GREEN+"Tarih formatı doğru."+Style.RESET_ALL)  # Format doğruysa mesaj yazdır
+                                    date=value # tüm haberleri getirmek için bu değişkeni belirledim tarihin içinde 2024'ün 20'si olan tüm verileri databaseden çekecek
+                                    url=self.get_the_all_news(date,Table_name,1,0)
+                                    
+                                    Table_name="Odev"
+                                    self.get_news_or_my_custom_news(url,Table_name)  
+                                
+                                else:
+                                    print(Fore.RED+"Yanlış formatta giriş yaptınız."+Style.RESET_ALL)  # Parçalar doğru uzunlukta veya sayı değilse mesaj yazdır
+                            else:
+                                print(Fore.RED+"Yanlış formatta giriş yaptınız."+Style.RESET_ALL)  # '/' karakteri sayısı doğru değilse mesaj yazdır
                         
-                        else:
-                            print(Fore.RED+"Yanlış formatta giriş yaptınız."+Style.RESET_ALL)  # Parçalar doğru uzunlukta veya sayı değilse mesaj yazdır
-                    else:
-                        print(Fore.RED+"Yanlış formatta giriş yaptınız."+Style.RESET_ALL)  # '/' karakteri sayısı doğru değilse mesaj yazdır
+                        except KeyboardInterrupt:
+                            print("\nçıkış yapılıyor")
+                            
+                            
+                            user_input = self.back()
+                            if user_input == 'e' or user_input == 'e':
+                                os.system('clear')
+                                break
+                            elif user_input == 'a' or user_input == 'A':
+                                os.system('clear')
+                                continue
+                            else:
+                                print("Good By :)")
+                                #exit()
+
 
                     user_input = self.back()
                     if user_input == 'b' or user_input == 'B':
@@ -752,6 +852,8 @@ class Program:
                     
                 
                 elif option == "4":
+
+
                     os.system("clear")
 
                     Table_name="Odev_Sub"
@@ -776,6 +878,7 @@ class Program:
                         if option=="1":
                             
                             try:
+                                os.system("clear")
                                 Table_name="Genel_Saglik"
                                 self.main_processes(Table_name)
                             
@@ -793,6 +896,7 @@ class Program:
                                 
 
                         elif option=="2":
+                            os.system("clear")
 
                             try:
                                 Table_name="Anne_Cocuk"
@@ -812,6 +916,7 @@ class Program:
 
 
                         elif option=="3":
+                            os.system("clear")
 
                             try:
                                 Table_name="Kalp_Saglik"
@@ -831,6 +936,7 @@ class Program:
 
 
                         elif option =="4":
+                            os.system("clear")
 
                             try:
                                 Table_name="Beslenme"    
@@ -850,6 +956,7 @@ class Program:
 
 
                         elif option=="5":
+                            os.system("clear")
 
                             try:
                                 Table_name="Kanser"    
@@ -869,6 +976,7 @@ class Program:
 
 
                         elif option=="6":
+                            os.system("clear")
 
                             try:
                                 Table_name="Cinsel_Saglik"
@@ -888,6 +996,7 @@ class Program:
 
 
                         elif option=="7":
+                            os.system("clear")
 
                             try:
                                 Table_name="Estetik_Cerrahi"
@@ -904,11 +1013,54 @@ class Program:
                                 else:
                                     print("Good By :)")
                                     exit()
-
+                        
                             
                         else:
                             print(Fore.RED+"Yanlış tuşladınız tekrar deneyin"+Style.RESET_ALL)
                             continue
+
+                elif option == "5":
+
+                    os.system("clear")
+                    Table_name="Odev"
+                    date=20 # tüm haberleri getirmek için bu değişkeni belirledim tarihin içinde 2024'ün 20'si olan tüm verileri databaseden çekecek
+                    url=self.get_the_all_news(date,Table_name,1,1)
+                    self.get_news_or_my_custom_news(url, Table_name)  
+
+                    #ana menüye dönme veya aracı kullanmaya devam etmek için kontrol mekanizması
+                    user_input = self.back()
+                    if user_input == 'b' or user_input == 'B':
+                        os.system('clear')
+                        break
+                    elif user_input == 'a' or user_input == 'A':
+                        os.system('clear')
+                        continue
+                    else:
+                        print("Good By :)")
+                        exit()
+
+
+                elif option == "6":
+                    
+                    os.system("clear")
+                    Table_name="Odev"
+                    date=20 # tüm haberleri getirmek için bu değişkeni belirledim tarihin içinde 2024'ün 20'si olan tüm verileri databaseden çekecek
+                    url=self.get_the_all_news(date,Table_name,0,0)
+                    self.get_news_or_my_custom_news(url, Table_name)     
+
+                    #ana menüye dönme veya aracı kullanmaya devam etmek için kontrol mekanizması
+                    user_input = self.back()
+                    if user_input == 'b' or user_input == 'B':
+                        os.system('clear')
+                        break
+                    elif user_input == 'a' or user_input == 'A':
+                        os.system('clear')
+                        continue
+                    else:
+                        print("Good By :)")
+                        exit()
+
+
 
                 else:
                     print("byby")       
@@ -921,6 +1073,90 @@ class Program:
 
             # Tüm hataları yakala ve göster
             print(f"Hata oluştu: {e}")
+
+
+    def url_to_image(self,url):  # Verilen URL'deki resmi indiren ve OpenCV formatına dönüştüren fonksiyon
+        try:
+            # URL'den resmi indir
+            response = requests.get(url, stream=True)
+            response.raise_for_status()  # HTTP hatalarını kontrol et
+            image_data = np.asarray(bytearray(response.raw.read()), dtype="uint8")
+            image = cv2.imdecode(image_data, cv2.IMREAD_COLOR)
+            if image is None:
+                raise ValueError("Resim indirilemedi veya çözülemedi.")
+            return image
+        except Exception as e:
+            print(f"Hata oluştu: {e}")
+            return None
+    
+    def detect_humans(self,url): # resim de insan var ise True dön , yok ise False dön 
+
+
+            
+        image = self.url_to_image(url)
+
+        if image is None or image.size == 0: # bu if clause opencvde error: (-215:Assertion failed) !ssize.empty() in function 'resize' hatasını engellemek için konulmuştur. 
+            print("Geçersiz veya boş görüntü.")
+            return False
+
+        # YOLOv3 için önceden eğitilmiş model ve konfigürasyon dosyalarını yükle
+        net = cv2.dnn.readNet("yolov3.weights", "yolov3.cfg")
+        layer_names = net.getLayerNames()
+        
+        try:
+            output_layers = [layer_names[i - 1] for i in net.getUnconnectedOutLayers()]
+        except:
+            output_layers = [layer_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
+
+        # COCO sınıf isimlerini yükle
+        with open("coco.names", "r") as f:
+            classes = [line.strip() for line in f.readlines()]
+
+        # Resmi blob'a çevir
+        blob = cv2.dnn.blobFromImage(image, 0.00392, (416, 416), (0, 0, 0), True, crop=False)
+        net.setInput(blob)
+        outs = net.forward(output_layers)
+
+        # Tespit edilen nesneler için bilgi listesi
+        class_ids = []
+        confidences = []
+        boxes = []
+
+        for out in outs:
+            for detection in out:
+                scores = detection[5:]
+                class_id = np.argmax(scores)
+                confidence = scores[class_id]
+                if confidence > 0.5 and classes[class_id] == "person":
+                    # Nesnenin merkezi ve kutusu
+                    center_x = int(detection[0] * image.shape[1])
+                    center_y = int(detection[1] * image.shape[0])
+                    w = int(detection[2] * image.shape[1])
+                    h = int(detection[3] * image.shape[0])
+
+                    # Kutunun sol üst köşesi
+                    x = int(center_x - w / 2)
+                    y = int(center_y - h / 2)
+
+                    boxes.append([x, y, w, h])
+                    confidences.append(float(confidence))
+                    class_ids.append(class_id)
+
+        if len(class_ids) > 0:
+            return True
+        else:
+            return False
+        
+    
+    '''# Resim URL'sini buraya girin
+    url = "https://im.haberturk.com/l/2024/05/31/ver1717148503/3691280/jpg/640x640"
+    image = url_to_image(url)
+    contains_human = detect_humans(image)
+
+    if contains_human:
+        print("Resimde insan var.")
+    else:
+        print("Resimde insan yok.")'''
 
 #----------------------------------------------------------------
 

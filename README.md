@@ -2,6 +2,7 @@
 
 >- git clone https://github.com/ozan-B/get_news_haberturk.git
 >- cd get_news_haberturk/project
+>- git clone https://github.com/patrick013/Object-Detection---Yolov3/blob/master/model/yolov3.weights
 >- python3 setup.py
 >- python3 main.py
 
